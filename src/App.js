@@ -4,7 +4,6 @@ import CharactersList from './components/Characters/CharacterList';
 import NewCharacterForm from './components/CharacterForm/NewCharacterForm';
 import Chart from './components/Chart/Chart';
 import APLInfo from './components/APLInfo/APLInfo';
-//const sum = (accumulator, curr) => accumulator + curr;
 
 function App() {
   const [Characters, setCharacters] = useState([]);
@@ -15,13 +14,35 @@ function App() {
   const [MaxXPAward, setMaxXPAward] = useState(300);
   const [MinXPAward, setMinXPAward] = useState(200);
   const [GoldAward, setGoldAward] = useState(500);
-  const [TreasureLevels, setTreasureLevels] = useState('');
+  const [TreasureLevels, setTreasureLevels] = useState('Uncommon');
   const [TotalCharacterLevels,setTotalCharacterLevels] = useState(1);
-
-
 
   const AddCharacterHandler = (character) => {
     let tempCharacters = [character,...Characters];
+    charactersWereUpdated(tempCharacters);
+  }
+
+  const onDeleteCharacterHandler = (characterName) =>{
+    console.log(Characters)
+    let tempCharacters = [...Characters].filter(charact => charact.name !== characterName);
+    console.log(tempCharacters);
+    charactersWereUpdated(tempCharacters)
+  }
+
+  const charactersWereUpdated = (tempCharacters) =>{
+    if(tempCharacters.length === 0){
+      setCharacters((prevState) => {
+        return tempCharacters;
+      });
+      setTotalCharacterLevels(1);
+      setAPL(1);
+      setMaxXPAward(500);
+      setMinXPAward(200);
+      setGoldAward(500);
+      setTreasureLevels('Uncommon');
+      return;
+    }
+    
     setCharacters((prevState) => {
       return tempCharacters;
     });
@@ -57,7 +78,7 @@ function App() {
       <Chart dataPoints={Characters} />
       <APLInfo totalCharacterLevels={TotalCharacterLevels} apl={APL} xpmax={MaxXPAward} xpmin={MinXPAward} gold={GoldAward} treasureLevels={TreasureLevels}/>
       <hr/>
-      <CharactersList characterList={Characters} />
+      <CharactersList characterList={Characters} onDeleteCharacter={onDeleteCharacterHandler} />
     </div>
   );
 }
